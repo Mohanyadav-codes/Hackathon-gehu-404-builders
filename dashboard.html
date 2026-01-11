@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRED TRACKER - Your Credit Health Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="grain-overlay"></div>
+    <div class="bg-gradient"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <h1 class="logo-text">CRED<span>TRACKER</span></h1>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-page="overview">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Overview</span>
+            </a>
+            <a href="#" class="nav-item" data-page="bills">
+                <span class="nav-icon">🔔</span>
+                <span class="nav-label">Bills & Alerts</span>
+            </a>
+            <a href="#" class="nav-item" data-page="emis">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">EMI Scheduler</span>
+            </a>
+            <a href="#" class="nav-item" data-page="hidden">
+                <span class="nav-icon">🧾</span>
+                <span class="nav-label">Hidden Debt</span>
+            </a>
+            <a href="#" class="nav-item" data-page="credit">
+                <span class="nav-icon">📈</span>
+                <span class="nav-label">Credit Replay</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile" id="userProfile">
+                <div class="user-avatar skeleton" id="userAvatar"></div>
+                <div class="user-info">
+                    <div class="user-name skeleton-text" id="userName">Loading...</div>
+                    <div class="user-status skeleton-text" id="userStatus">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h2 class="page-title" id="pageTitle">Dashboard Overview</h2>
+                <p class="page-subtitle">Your financial health at a glance</p>
+            </div>
+            <div class="header-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search transactions..." id="searchInput">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </div>
+                <button class="notification-btn" id="notificationBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Credit Score Hero Section -->
+        <section class="credit-hero">
+            <div class="credit-score-card">
+                <div class="credit-score-header">
+                    <div>
+                        <h3>Credit Score</h3>
+                        <p class="score-date" id="scoreDate">Loading...</p>
+                    </div>
+                    <div class="score-trend skeleton" id="scoreTrend"></div>
+                </div>
+                <div class="credit-score-display">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 200 200">
+                            <defs>
+                                <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="100" cy="100" r="85" class="score-bg"/>
+                            <circle cx="100" cy="100" r="85" class="score-progress" id="scoreProgress" style="--score-percent: 0"/>
+                        </svg>
+                        <div class="score-number">
+                            <span class="score-value" id="scoreValue">---</span>
+                            <span class="score-max">/850</span>
+                        </div>
+                    </div>
+                    <div class="score-details">
+                        <div class="score-rating">
+                            <span class="rating-badge skeleton" id="ratingBadge"></span>
+                            <p id="ratingMessage">Loading your credit score...</p>
+                        </div>
+                        <div class="score-factors" id="scoreFactors">
+                            <div class="factor">
+                                <span class="factor-label">Payment History</span>
+                                <div class="factor-bar">
+                                    <div class="factor-fill" id="factorPayment" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="factor">
+                                <span class="factor-label">Credit Utilization</span>
+                                <div class="factor-bar">
+                                    <div class="factor-fill" id="factorUtilization" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="factor">
+                                <span class="factor-label">Credit Age</span>
+                                <div class="factor-bar">
+                                    <div class="factor-fill" id="factorAge" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon bills">🔔</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Upcoming Bills</p>
+                        <h3 class="stat-value" id="upcomingBillsCount">--</h3>
+                        <span class="stat-meta" id="upcomingBillsMeta">Loading...</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon emis">📅</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Active EMIs</p>
+                        <h3 class="stat-value" id="activeEMIsCount">--</h3>
+                        <span class="stat-meta" id="activeEMIsMeta">Loading...</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon hidden">🧾</div>
+                    <div class="stat-content">
+                        <p class="stat-label">Hidden Debt</p>
+                        <h3 class="stat-value" id="hiddenDebtAmount">--</h3>
+                        <span class="stat-meta" id="hiddenDebtMeta">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Bills Section -->
+        <section class="section">
+            <div class="section-header">
+                <h3>Upcoming Bills & Alerts</h3>
+                <button class="scan-btn" id="scanBillsBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+            <div class="bills-list" id="billsList">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Loading your bills...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EMI Prioritization -->
+        <section class="section">
+            <div class="section-header">
+                <h3>EMI Prioritization Schedule</h3>
+                <button class="filter-btn" id="filterEMIBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="21" x2="4" y2="14"/>
+                        <line x1="4" y1="10" x2="4" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12" y2="3"/>
+                        <line x1="20" y1="21" x2="20" y2="16"/>
+                        <line x1="20" y1="12" x2="20" y2="3"/>
+                    </svg>
+                    Filter
+                </button>
+            </div>
+            <div class="emi-timeline" id="emiTimeline">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Loading EMI schedule...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hidden Debt Detection -->
+        <section class="section">
+            <div class="section-header">
+                <h3>Hidden Debt Detection</h3>
+                <div class="header-actions">
+                    <span class="total-hidden" id="totalHiddenDebt">Total: ₹--/month</span>
+                    <button class="scan-btn" id="scanDebtBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        Scan Expenses
+                    </button>
+                </div>
+            </div>
+            <div class="hidden-debt-grid" id="hiddenDebtGrid">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Scanning for hidden debts...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Credit Score Replay (Timeline) -->
+        <section class="section" id="creditReplaySection" style="display: none;">
+            <div class="section-header">
+                <h3>Credit Score Replay</h3>
+                <div class="period-selector">
+                    <button class="period-btn active" data-period="3m">3M</button>
+                    <button class="period-btn" data-period="6m">6M</button>
+                    <button class="period-btn" data-period="1y">1Y</button>
+                    <button class="period-btn" data-period="all">All</button>
+                </div>
+            </div>
+            <div class="credit-timeline" id="creditTimeline">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Loading credit history...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
